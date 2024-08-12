@@ -15,7 +15,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     networks:
-      - cloudflare_tunnel
+      - tunnel_network
     deploy:
       resources:
         limits:
@@ -34,7 +34,7 @@ services:
       PMA_HOST: database
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     networks:
-      - cloudflare_tunnel
+      - tunnel_network
 
   wordpress:
     container_name: wordpress_tandira
@@ -53,13 +53,13 @@ services:
     volumes:
       - ./wp-content:/var/www/html/wp-content
     networks:
-      - cloudflare_tunnel
+      - tunnel_network
     entrypoint: ["/bin/bash", "./start.sh"]
 
 volumes:
   db-data:
 
 networks:
-  cloudflare_tunnel:
+  tunnel_network:
     driver: bridge
     external: true
