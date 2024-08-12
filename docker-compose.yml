@@ -4,7 +4,7 @@ services:
     container_name: database_tandira
     image: mariadb:10.6.4-focal
     restart: unless-stopped
-    ports:
+    expose:
       - "3306"
     env_file: .env
     environment:
@@ -27,7 +27,7 @@ services:
       - database
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
-    ports:
+    expose:
       - "80"
     env_file: .env
     environment:
@@ -42,7 +42,7 @@ services:
       - database
     image: wordpress:6.2.2-apache
     restart: unless-stopped
-    ports:
+    expose:
       - "80"
     env_file: .env
     environment:
@@ -61,3 +61,4 @@ volumes:
 networks:
   cloudflare_tunnel:
     driver: bridge
+    external: true
