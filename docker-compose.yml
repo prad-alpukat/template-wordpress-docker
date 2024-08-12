@@ -2,7 +2,6 @@ name: wordpress-docker
 services:
   database:
     container_name: database_tandira
-    # We use a mariadb image which supports both amd64 & arm64 architecture
     image: mariadb:10.6.4-focal
     restart: unless-stopped
     ports:
@@ -16,7 +15,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     networks:
-      - wordpress-network
+      - cloudflare_tunnel
     deploy:
       resources:
         limits:
@@ -35,7 +34,7 @@ services:
       PMA_HOST: database
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     networks:
-      - wordpress-network
+      - cloudflare_tunnel
 
   wordpress:
     container_name: wordpress_tandira
@@ -47,18 +46,18 @@ services:
       - "80"
     env_file: .env
     environment:
-      WORDPRESS_DB_HOST: database:3306 # use the same name as database service
+      WORDPRESS_DB_HOST: database:3306
       WORDPRESS_DB_NAME: "${MYSQL_DATABASE}"
       WORDPRESS_DB_USER: "${MYSQL_USER}"
       WORDPRESS_DB_PASSWORD: "${MYSQL_PASSWORD}"
     volumes:
       - ./wp-content:/var/www/html/wp-content
     networks:
-      - wordpress-network
+      - cloudflare_tunnel
 
 volumes:
   db-data:
 
 networks:
-  wordpress-network:
+  cloudflare_tunnel:
     driver: bridge
