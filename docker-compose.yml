@@ -40,7 +40,7 @@ services:
     container_name: wordpress_tandira
     depends_on:
       - database
-    image: wordpress:6.2.2-apache
+    image: wordpress:cli-php8.3
     restart: unless-stopped
     expose:
       - "80"
@@ -54,6 +54,7 @@ services:
       - ./wp-content:/var/www/html/wp-content
     networks:
       - cloudflare_tunnel
+    entrypoint: ["/bin/bash", "./start.sh"]
 
 volumes:
   db-data:
