@@ -1,7 +1,7 @@
-name: wordpress-docker
+name: "${PROJECT_NAME}"
 services:
   database:
-    container_name: database_tandira
+    container_name: database_${PROJECT_NAME}
     image: mariadb:10.6.4-focal
     restart: unless-stopped
     expose:
@@ -22,7 +22,7 @@ services:
           memory: 2048m
 
   phpmyadmin:
-    container_name: phpmyadmin_tandira
+    container_name: phpmyadmin_${PROJECT_NAME}
     depends_on:
       - database
     image: phpmyadmin/phpmyadmin
@@ -37,7 +37,7 @@ services:
       - tunnel_network
 
   wordpress:
-    container_name: wordpress_tandira
+    container_name: wordpress_${PROJECT_NAME}
     depends_on:
       - database
     image: wordpress:php8.2-apache
@@ -54,7 +54,6 @@ services:
       - ./wp-content:/var/www/html/wp-content
     networks:
       - tunnel_network
-    entrypoint: ["/bin/bash", "./start.sh"]
 
 volumes:
   db-data:
