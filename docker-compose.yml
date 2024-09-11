@@ -19,7 +19,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2048m
+          cpus: '0.5'       # Membatasi penggunaan CPU hingga 50% dari 1 core
+          memory: '512M'    # Membatasi penggunaan memori hingga 512 MB
+        reservations:
+          cpus: '0.25'      # Memastikan setidaknya 25% dari 1 core dialokasikan
+          memory: '256M'    # Memastikan setidaknya 256 MB memori dialokasikan
 
   phpmyadmin:
     container_name: pma_${PROJECT_NAME}
@@ -35,6 +39,14 @@ services:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     networks:
       - tunnel_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'       # Membatasi penggunaan CPU hingga 50% dari 1 core
+          memory: '512M'    # Membatasi penggunaan memori hingga 512 MB
+        reservations:
+          cpus: '0.25'      # Memastikan setidaknya 25% dari 1 core dialokasikan
+          memory: '256M'    # Memastikan setidaknya 256 MB memori dialokasikan
 
   wordpress:
     container_name: wp_${PROJECT_NAME}
@@ -54,6 +66,14 @@ services:
       - ./wp-content:/var/www/html/wp-content
     networks:
       - tunnel_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'       # Membatasi penggunaan CPU hingga 50% dari 1 core
+          memory: '512M'    # Membatasi penggunaan memori hingga 512 MB
+        reservations:
+          cpus: '0.25'      # Memastikan setidaknya 25% dari 1 core dialokasikan
+          memory: '256M'    # Memastikan setidaknya 256 MB memori dialokasikan
 
 volumes:
   db-data:
