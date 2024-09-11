@@ -1,6 +1,6 @@
 name: "${PROJECT_NAME}"
 services:
-  database:
+  db_name:
     container_name: db_${PROJECT_NAME}
     image: mariadb:10.6.4-focal
     restart: unless-stopped
@@ -28,14 +28,14 @@ services:
   phpmyadmin:
     container_name: pma_${PROJECT_NAME}
     depends_on:
-      - database
+      - db_name
     image: phpmyadmin/phpmyadmin
     restart: unless-stopped
     expose:
       - "80"
     env_file: .env
     environment:
-      PMA_HOST: database
+      PMA_HOST: db_name
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
     networks:
       - tunnel_network
@@ -51,17 +51,20 @@ services:
   wordpress:
     container_name: wp_${PROJECT_NAME}
     depends_on:
-      - database
+      - db_name
     image: wordpress:php8.2-apache
     restart: unless-stopped
     expose:
       - "80"
     env_file: .env
     environment:
-      WORDPRESS_DB_HOST: database:3306
+      WORDPRESS_DB_HOST: db_name:3306
       WORDPRESS_DB_NAME: "${MYSQL_DATABASE}"
       WORDPRESS_DB_USER: "${MYSQL_USER}"
       WORDPRESS_DB_PASSWORD: "${MYSQL_PASSWORD}"
+      WORDPRESS_MEMORY_LIMIT: 256M  # Menetapkan limit memori WordPress
+      PHP_UPLOAD_MAX_FILESIZE: 512M # Menetapkan ukuran maksimum file upload
+      PHP_POST_MAX_SIZE: 512M       # Menetapkan ukuran maksimum pos
     volumes:
       - ./wp-content:/var/www/html/wp-content
     networks:
